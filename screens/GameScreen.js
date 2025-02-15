@@ -13,56 +13,50 @@ import { useState } from 'react';
 import * as Crypto from 'expo-crypto';
 import GuessLogItem from '../components/GuessLogItem';
 
-export default function GameScreen({ userNumber }) {
+export default function GameScreen({ userNumber, endGame }) {
   const [min, setMin] = useState(1);
   const [max, setMax] = useState(99);
   const [guess, setGuess] = useState(null);
   const [guessLog, setGuessLog] = useState([]);
 
   if (guess === null) {
-    const firstGuess = getRandomNumber(min, max);
-    setGuess(firstGuess);
-    setGuessLog((currentGuessLog) => [
-      ...currentGuessLog,
-      {
-        guess: firstGuess,
-        key: Crypto.randomUUID(),
-      },
-    ]);
+    guessNumber(min, max);
   }
 
-  console.log(`guess log is: ${guessLog}`);
+  function guessNumber(min, max) {
+    const newGuess = getRandomNumber(min, max);
+
+    if (guessIsRight(newGuess)) {
+      console.log('NUMBER WAS GUESSED!');
+      endGame(guessLog.length);
+    } else {
+      setGuess(newGuess);
+      setGuessLog((currentGuessLog) => [
+        ...currentGuessLog,
+        { guess: newGuess, key: Crypto.randomUUID() },
+      ]);
+    }
+  }
+
+  function guessIsRight(newGuess) {
+    return newGuess === parseInt(userNumber);
+  }
 
   function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   function handleHighLow(input) {
-    let newGuess;
-
     if (input === 'higher') {
       const newMin = guess + 1;
       setMin(newMin);
-      newGuess = getRandomNumber(newMin, max);
+      guessNumber(newMin, max);
     } else {
       const newMax = guess;
       setMax(newMax);
-      newGuess = getRandomNumber(min, newMax);
+      guessNumber(min, newMax);
     }
-
-    setGuess(newGuess);
-    setGuessLog((currentGuessLog) => [
-      ...currentGuessLog,
-      {
-        guess: newGuess,
-        key: Crypto.randomUUID,
-      },
-    ]);
   }
-
-  console.log(`New max is: ${max}`);
-  console.log(`New min is: ${min}`);
-  console.log(`New guess is: ${guess}`);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -78,9 +72,8 @@ export default function GameScreen({ userNumber }) {
             <Button text="+" onPress={() => handleHighLow('higher')} />
           </View>
         </View>
-        d
         <FlatList
-          data={guessLog.reverse()}
+          data={[...guessLog.reverse()]}
           renderItem={({ item, index }) => (
             <GuessLogItem guess={item.guess} index={index} numGuesses={guessLog.length} />
           )}
@@ -118,6 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     padding: 24,
     borderRadius: 20,
+    alignItems: 'center',
   },
   highLowHeader: {
     fontSize: 24,

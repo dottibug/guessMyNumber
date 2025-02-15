@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     padding: 24,
     borderRadius: 20,
+    alignItems: 'center',
   },
   numberContainer: {
     gap: 12,

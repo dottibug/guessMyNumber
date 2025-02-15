@@ -1,6 +1,7 @@
 import { StyleSheet, View, ImageBackground } from 'react-native';
 import StartScreen from './screens/StartScreen';
 import GameScreen from './screens/GameScreen';
+import GameOverScreen from './screens/GameOverScreen';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 
@@ -8,11 +9,24 @@ export default function App() {
   const bgImage = './assets/images/background.png';
 
   const [userNumber, setUserNumber] = useState(null);
+  const [gameOver, setGameOver] = useState(false);
+  const [rounds, setRounds] = useState(null);
 
   function handleStartGame(number) {
-    console.log(`setting the user number to: ${number}`);
-
     setUserNumber(number);
+  }
+
+  function handleEndGame(rounds) {
+    setRounds(rounds);
+    setGameOver(!gameOver);
+  }
+
+  function renderScreen() {
+    if (userNumber === null) return <StartScreen startGame={handleStartGame} />;
+
+    if (!gameOver) return <GameScreen userNumber={userNumber} endGame={handleEndGame} />;
+
+    return <GameOverScreen rounds={rounds} userNumber={userNumber} />;
   }
 
   return (
@@ -22,11 +36,7 @@ export default function App() {
         resizeMode="cover"
         style={styles.bgImage}>
         <LinearGradient colors={['#9EB7B8', '#3C6E71']} style={styles.background} />
-        {userNumber === null ? (
-          <StartScreen startGame={(number) => handleStartGame(number)} />
-        ) : (
-          <GameScreen userNumber={userNumber} />
-        )}
+        {renderScreen()}
       </ImageBackground>
     </View>
   );
