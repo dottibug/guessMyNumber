@@ -6,6 +6,7 @@ import {
   StatusBar,
   Platform,
   FlatList,
+  Alert,
 } from 'react-native';
 import { colors } from '../styles/styles';
 import Button from '../components/Button';
@@ -46,7 +47,33 @@ export default function GameScreen({ userNumber, endGame }) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  function inputIsALie(input) {
+    return (
+      (input === 'higher' && userNumber < guess) ||
+      (input === 'lower' && userNumber > guess)
+    );
+  }
+
+  function showAlert() {
+    const title = "Something isn't right";
+    const message = "Don't lie or it's not a fun game!";
+    const button = [
+      {
+        text: 'OK',
+        onPress: () => {
+          return true;
+        },
+      },
+    ];
+    Alert.alert(title, message, button);
+  }
+
   function handleHighLow(input) {
+    if (inputIsALie(input)) {
+      showAlert();
+      return;
+    }
+
     if (input === 'higher') {
       const newMin = guess + 1;
       setMin(newMin);
