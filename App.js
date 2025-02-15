@@ -12,6 +12,12 @@ export default function App() {
   const [gameOver, setGameOver] = useState(false);
   const [rounds, setRounds] = useState(null);
 
+  function reset() {
+    setUserNumber(null);
+    setGameOver(false);
+    setRounds(null);
+  }
+
   function handleStartGame(number) {
     setUserNumber(number);
   }
@@ -26,7 +32,9 @@ export default function App() {
 
     if (!gameOver) return <GameScreen userNumber={userNumber} endGame={handleEndGame} />;
 
-    return <GameOverScreen rounds={rounds} userNumber={userNumber} />;
+    return (
+      <GameOverScreen rounds={rounds} userNumber={userNumber} startNewGame={reset} />
+    );
   }
 
   return (

@@ -10,11 +10,9 @@ import {
 import Button from '../components/Button';
 import { colors } from '../styles/styles';
 
-export default function GameOverScreen({ rounds, userNumber }) {
-  const summary = `It took ${rounds + 1} rounds to guess the number ${userNumber}.`;
-
+export default function GameOverScreen({ rounds, userNumber, startNewGame }) {
   function handleNewGame() {
-    console.log('start new game');
+    startNewGame();
   }
 
   return (
