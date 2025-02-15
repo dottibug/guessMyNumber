@@ -21,12 +21,9 @@ export default function GameOverScreen({ rounds, userNumber, startNewGame }) {
         <Text style={styles.title}>Game Over</Text>
         <Image source={require('../assets/images/success.png')} style={styles.image} />
         <View style={styles.summaryContainer}>
-          <Text>
-            <Text style={styles.summaryText}>{` It took `}</Text>
-            <Text style={styles.summaryTextBold}>{rounds + 1}</Text>
-            <Text style={styles.summaryText}>{` rounds to guess the number `}</Text>
-            <Text style={styles.summaryTextBold}>{userNumber}</Text>
-            <Text style={styles.summaryText}>.</Text>
+          <Text style={styles.summaryText}>
+            It took <Text style={styles.summaryTextBold}>{rounds + 1}</Text> rounds to
+            guess the number <Text style={styles.summaryTextBold}>{userNumber}</Text>.
           </Text>
         </View>
         <View style={styles.btnLayoutHorizontal}>
@@ -62,7 +59,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   summaryTextBold: {
-    fontSize: 28,
     fontWeight: 'bold',
     color: colors.indigo,
   },
